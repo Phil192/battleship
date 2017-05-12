@@ -5,7 +5,7 @@ import (
   "math/rand"
   "strconv"
   "time"
-	)
+  )
 
 
 var board [8][8]string
@@ -65,12 +65,12 @@ func unrepeated_ship() int {
   random := rand.New(seed)
   len_ship := random.Intn(4) + 1
   for len(used_ships) < 4 {
-    fmt.Println(len(used_ships))
+    used_ships = append(used_ships, len_ship)
     for _, ship := range used_ships{
-      if len_ship == ship {
-        len_ship = random.Intn(4) + 1
-      } else {
+      if len_ship != ship {
         used_ships = append(used_ships, len_ship)
+      } else {
+        len_ship = random.Intn(4) + 1
       }
     }
   }
@@ -85,7 +85,7 @@ func placing_ships_and_dots(coordinates []map[int]int) {
     for row, col := range coord {
       board[row][col] = strconv.Itoa(len_ship)
       for _, value := range dot_coord {
-        if (row + value[0]) < 0 || (row + value[0]) > 0 || col + value[1] < 0 || col + value[1] > 7 {
+        if (row + value[0]) < 0 || (row + value[0]) > 7 || col + value[1] < 0 || col + value[1] > 7 {
           continue
         } else if board[row + value[0]][col + value[1]] != "~" {
           continue
@@ -100,5 +100,6 @@ func placing_ships_and_dots(coordinates []map[int]int) {
 
 func main(){
   painting_sea()
-  fmt.Println(unrepeated_ship())
+  placing_ships_and_dots(searching_free_slots(random_direction(), unrepeated_ship()))
+  fmt.Println(board)
 }
