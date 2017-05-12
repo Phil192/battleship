@@ -9,14 +9,14 @@ import (
 
 var board [8][8]string
 
-func random_number(num int) int {
+func getRandom(num int) int {
 	seed := rand.NewSource(time.Now().UnixNano())
 	random := rand.New(seed)
-	random_number := random.Intn(num)
-	return random_number
+	randomNumber := random.Intn(num)
+	return randomNumber
 }
 
-func painting_sea() {
+func paintingSea() {
 	for i := 0; i < 8; i++ {
 		for j := 0; j < 8; j++ {
 			board[i][j] = "~"
@@ -24,66 +24,65 @@ func painting_sea() {
 	}
 }
 
-func random_direction() string {
-	random_number := random_number(2)
-	if random_number == 0 {
+func randomDirection() string {
+	randomNumber := getRandom(2)
+	if randomNumber == 0 {
 		return "row"
-	} else {
-		return "col"
 	}
+	return "col"
 }
 
-func searching_free_slots(direction string, len_ship int) []map[int]int {
-	ship_coordinates := make([]map[int]int, 0, len_ship)
-	valid_slots := 0
-	random_slot := random_number(8)
-	ship_start_random := random_number(8 - len_ship)
+func searchingFreeSlots(direction string, lenShip int) []map[int]int {
+	shipCoordinates := make([]map[int]int, 0, lenShip)
+	validSlots := 0
+	randomSlot := getRandom(8)
+	shipStartRandom := getRandom(8 - lenShip)
 
-	for valid_slots < len_ship {
-		if direction == "row" && board[ship_start_random][random_slot] == "~" {
-			coord := map[int]int{ship_start_random: random_slot}
-			ship_coordinates = append(ship_coordinates, coord)
-			ship_start_random++
-			valid_slots++
-		} else if direction == "col" && board[random_slot][ship_start_random] == "~" {
-			coord := map[int]int{random_slot: ship_start_random}
-			ship_coordinates = append(ship_coordinates, coord)
-			ship_start_random++
-			valid_slots++
+	for validSlots < lenShip {
+		if direction == "row" && board[shipStartRandom][randomSlot] == "~" {
+			coord := map[int]int{shipStartRandom: randomSlot}
+			shipCoordinates = append(shipCoordinates, coord)
+			shipStartRandom++
+			validSlots++
+		} else if direction == "col" && board[randomSlot][shipStartRandom] == "~" {
+			coord := map[int]int{randomSlot: shipStartRandom}
+			shipCoordinates = append(shipCoordinates, coord)
+			shipStartRandom++
+			validSlots++
 		} else {
-			ship_coordinates = make([]map[int]int, 0, len_ship)
-			random_slot = random_number(8)
-			ship_start_random = random_number(8 - len_ship)
-			valid_slots = 0
+			shipCoordinates = make([]map[int]int, 0, lenShip)
+			randomSlot = getRandom(8)
+			shipStartRandom = getRandom(8 - lenShip)
+			validSlots = 0
 		}
 	}
-	return ship_coordinates
+	return shipCoordinates
 }
 
-var used_ships []int
+var usedShips []int
 
-func unrepeated_ship() int {
-	len_ship := random_number(4) + 1
-	for len(used_ships) < 4 {
-		used_ships = append(used_ships, len_ship)
-		for _, ship := range used_ships {
-			if len_ship != ship {
-				used_ships = append(used_ships, len_ship)
+func unrepeatedShip() int {
+	lenShip := getRandom(4) + 1
+	for len(usedShips) < 4 {
+		usedShips = append(usedShips, lenShip)
+		for _, ship := range usedShips {
+			if lenShip != ship {
+				usedShips = append(usedShips, lenShip)
 			} else {
-				len_ship = random_number(4) + 1
+				lenShip = getRandom(4) + 1
 			}
 		}
 	}
-	return len_ship
+	return lenShip
 }
 
-func placing_ships_and_dots(coordinates []map[int]int) {
-	len_ship := len(coordinates)
-	dot_coord := [][]int{{1, 1}, {1, 0}, {0, 1}, {-1, -1}, {-1, 0}, {0, -1}, {-1, 1}, {1, -1}}
+func placingShipsAndDots(coordinates []map[int]int) {
+	lenShip := len(coordinates)
+	dotCoord := [][]int{{1, 1}, {1, 0}, {0, 1}, {-1, -1}, {-1, 0}, {0, -1}, {-1, 1}, {1, -1}}
 	for _, coord := range coordinates {
 		for row, col := range coord {
-			board[row][col] = strconv.Itoa(len_ship)
-			for _, value := range dot_coord {
+			board[row][col] = strconv.Itoa(lenShip)
+			for _, value := range dotCoord {
 				if (row+value[0]) < 0 || (row+value[0]) > 7 || col+value[1] < 0 || col+value[1] > 7 {
 					continue
 				} else if board[row+value[0]][col+value[1]] != "~" {
@@ -97,7 +96,7 @@ func placing_ships_and_dots(coordinates []map[int]int) {
 }
 
 func main() {
-	painting_sea()
-	placing_ships_and_dots(searching_free_slots(random_direction(), unrepeated_ship()))
+	paintingSea()
+	placingShipsAndDots(searchingFreeSlots(randomDirection(), unrepeatedShip()))
 	fmt.Println(board)
 }
