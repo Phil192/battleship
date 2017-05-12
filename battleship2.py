@@ -24,12 +24,12 @@ class Sea(object):
         ship_start_random = random.randint(0, 7 - len_ship)
 
         while valid_slots < len_ship:
-            if direction is 'row' and self.board[ship_start_random][random_slot] is '~':
+            if direction == 'row' and self.board[ship_start_random][random_slot] == '~':
 
                 ship_start_random += 1
                 ship_coordinates.append({ship_start_random - 1: random_slot})
                 valid_slots += 1
-            elif direction is 'col' and self.board[random_slot][ship_start_random] is '~':
+            elif direction == 'col' and self.board[random_slot][ship_start_random] == '~':
                 ship_start_random += 1
                 ship_coordinates.append({random_slot: ship_start_random - 1})
                 valid_slots += 1
@@ -108,9 +108,3 @@ while len(pull_of_ships) < 4:
     elif len(str(ship_choice)) != 1:
         print('You need to choose number of ship length. It must be integer!')
         continue
-
-
-
-
-
-

@@ -4,6 +4,7 @@ import (
 	"fmt"
   "math/rand"
   "strconv"
+  "time"
 	)
 
 
@@ -18,7 +19,9 @@ func painting_sea() {
 }
 
 func random_direction() string {
-  random_number := rand.Intn(1)
+  seed := rand.NewSource(time.Now().UnixNano())
+  random := rand.New(seed)
+  random_number := random.Intn(2)
   if random_number == 0 {
     return "row"
   } else {
@@ -27,10 +30,12 @@ func random_direction() string {
 }
 
 func searching_free_slots(direction string, len_ship int) ([]map[int]int) {
-  ship_coordinates := make([]map[int]int, len_ship)
+  seed := rand.NewSource(time.Now().UnixNano())
+  random := rand.New(seed)
+  ship_coordinates := make([]map[int]int, 0, len_ship)
   valid_slots := 0
-  random_slot := rand.Intn(7)
-  ship_start_random := rand.Intn(7 - len_ship)
+  random_slot := random.Intn(8)
+  ship_start_random := random.Intn(8 - len_ship)
 
   for valid_slots < len_ship {
     if direction == "row" && board[ship_start_random][random_slot] == "~" {
@@ -44,9 +49,9 @@ func searching_free_slots(direction string, len_ship int) ([]map[int]int) {
       ship_start_random++
       valid_slots++
     } else {
-      ship_coordinates = make([]map[int]int, len_ship)
-      random_slot = rand.Intn(7)
-      ship_start_random = rand.Intn(7 - len_ship)
+      ship_coordinates = make([]map[int]int, 0, len_ship)
+      random_slot = random.Intn(8)
+      ship_start_random = random.Intn(8 - len_ship)
       valid_slots = 0
     }
   }
@@ -56,11 +61,14 @@ func searching_free_slots(direction string, len_ship int) ([]map[int]int) {
 var used_ships []int
 
 func unrepeated_ship() int {
-  len_ship := rand.Intn(3) + 1
+  seed := rand.NewSource(time.Now().UnixNano())
+  random := rand.New(seed)
+  len_ship := random.Intn(4) + 1
   for len(used_ships) < 4 {
+    fmt.Println(len(used_ships))
     for _, ship := range used_ships{
       if len_ship == ship {
-        len_ship = rand.Intn(3) + 1
+        len_ship = random.Intn(4) + 1
       } else {
         used_ships = append(used_ships, len_ship)
       }
@@ -92,6 +100,5 @@ func placing_ships_and_dots(coordinates []map[int]int) {
 
 func main(){
   painting_sea()
-  placing_ships_and_dots(searching_free_slots(random_direction(), unrepeated_ship()))
-  fmt.Println(board)
+  fmt.Println(unrepeated_ship())
 }
