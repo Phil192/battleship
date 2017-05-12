@@ -10,6 +10,13 @@ import (
 
 var board [8][8]string
 
+func random_number(num int) int {
+  seed := rand.NewSource(time.Now().UnixNano())
+  random := rand.New(seed)
+  random_number := random.Intn(num)
+  return random_number
+}
+
 func painting_sea() {
   for i := 0; i < 8; i++ {
     for j := 0; j < 8; j++ {
@@ -19,9 +26,7 @@ func painting_sea() {
 }
 
 func random_direction() string {
-  seed := rand.NewSource(time.Now().UnixNano())
-  random := rand.New(seed)
-  random_number := random.Intn(2)
+  random_number := random_number(2)
   if random_number == 0 {
     return "row"
   } else {
@@ -30,12 +35,10 @@ func random_direction() string {
 }
 
 func searching_free_slots(direction string, len_ship int) ([]map[int]int) {
-  seed := rand.NewSource(time.Now().UnixNano())
-  random := rand.New(seed)
   ship_coordinates := make([]map[int]int, 0, len_ship)
   valid_slots := 0
-  random_slot := random.Intn(8)
-  ship_start_random := random.Intn(8 - len_ship)
+  random_slot := random_number(8)
+  ship_start_random := random_number(8 - len_ship)
 
   for valid_slots < len_ship {
     if direction == "row" && board[ship_start_random][random_slot] == "~" {
@@ -50,8 +53,8 @@ func searching_free_slots(direction string, len_ship int) ([]map[int]int) {
       valid_slots++
     } else {
       ship_coordinates = make([]map[int]int, 0, len_ship)
-      random_slot = random.Intn(8)
-      ship_start_random = random.Intn(8 - len_ship)
+      random_slot = random_number(8)
+      ship_start_random = random_number(8 - len_ship)
       valid_slots = 0
     }
   }
@@ -61,16 +64,14 @@ func searching_free_slots(direction string, len_ship int) ([]map[int]int) {
 var used_ships []int
 
 func unrepeated_ship() int {
-  seed := rand.NewSource(time.Now().UnixNano())
-  random := rand.New(seed)
-  len_ship := random.Intn(4) + 1
+  len_ship := random_number(4) + 1
   for len(used_ships) < 4 {
     used_ships = append(used_ships, len_ship)
     for _, ship := range used_ships{
       if len_ship != ship {
         used_ships = append(used_ships, len_ship)
       } else {
-        len_ship = random.Intn(4) + 1
+        len_ship = random_number(4) + 1
       }
     }
   }
