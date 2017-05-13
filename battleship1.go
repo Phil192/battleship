@@ -7,8 +7,6 @@ import (
 	"time"
 )
 
-var board [8][8]string
-
 func getRandom(num int) int {
 	seed := rand.NewSource(time.Now().UnixNano())
 	random := rand.New(seed)
@@ -16,15 +14,20 @@ func getRandom(num int) int {
 	return randomNumber
 }
 
-func paintingSea() {
-	for i := 0; i < 8; i++ {
-		for j := 0; j < 8; j++ {
-			board[i][j] = "~"
-		}
-	}
+type Sea struct {
+	board [8][8]string
 }
 
-func randomDirection() string {
+func (s *Sea) paintingSea() {
+	for i := 0; i < 8; i++ {
+		for j := 0; j < 8; j++ {
+			s.board[i][j] = "~"
+		}
+	}
+	return
+}
+
+func (*Sea) randomDirection() string {
 	randomNumber := getRandom(2)
 	if randomNumber == 0 {
 		return "row"
@@ -32,19 +35,19 @@ func randomDirection() string {
 	return "col"
 }
 
-func searchingFreeSlots(direction string, lenShip int) []map[int]int {
+func (s *Sea) searchingFreeSlots(direction string, lenShip int) []map[int]int {
 	shipCoordinates := make([]map[int]int, 0, lenShip)
 	validSlots := 0
 	randomSlot := getRandom(8)
 	shipStartRandom := getRandom(8 - lenShip)
 
 	for validSlots < lenShip {
-		if direction == "row" && board[shipStartRandom][randomSlot] == "~" {
+		if direction == "row" && s.board[shipStartRandom][randomSlot] == "~" {
 			coord := map[int]int{shipStartRandom: randomSlot}
 			shipCoordinates = append(shipCoordinates, coord)
 			shipStartRandom++
 			validSlots++
-		} else if direction == "col" && board[randomSlot][shipStartRandom] == "~" {
+		} else if direction == "col" && s.board[randomSlot][shipStartRandom] == "~" {
 			coord := map[int]int{randomSlot: shipStartRandom}
 			shipCoordinates = append(shipCoordinates, coord)
 			shipStartRandom++
@@ -59,15 +62,18 @@ func searchingFreeSlots(direction string, lenShip int) []map[int]int {
 	return shipCoordinates
 }
 
-var usedShips []int
+type Warship struct {
+	*Sea
+	usedShips []int
+}
 
-func unrepeatedShip() int {
+func (w *Warship) unrepeatedShip() int {
 	lenShip := getRandom(4) + 1
-	for len(usedShips) < 4 {
-		usedShips = append(usedShips, lenShip)
-		for _, ship := range usedShips {
+	for len(w.usedShips) < 4 {
+		w.usedShips = append(w.usedShips, lenShip)
+		for _, ship := range w.usedShips {
 			if lenShip != ship {
-				usedShips = append(usedShips, lenShip)
+				w.usedShips = append(w.usedShips, lenShip)
 			} else {
 				lenShip = getRandom(4) + 1
 			}
@@ -76,9 +82,11 @@ func unrepeatedShip() int {
 	return lenShip
 }
 
-func placingShipsAndDots(coordinates []map[int]int) {
+func (w *Warship) placingShipsAndDots(coordinates []map[int]int) {
 	lenShip := len(coordinates)
 	dotCoord := [][]int{{1, 1}, {1, 0}, {0, 1}, {-1, -1}, {-1, 0}, {0, -1}, {-1, 1}, {1, -1}}
+	board := w.Sea.board // HERE!
+	fmt.Println(board)
 	for _, coord := range coordinates {
 		for row, col := range coord {
 			board[row][col] = strconv.Itoa(lenShip)
@@ -93,10 +101,13 @@ func placingShipsAndDots(coordinates []map[int]int) {
 			}
 		}
 	}
+	return
 }
 
 func main() {
-	paintingSea()
-	placingShipsAndDots(searchingFreeSlots(randomDirection(), unrepeatedShip()))
-	fmt.Println(board)
+	a := Sea{}
+	b := Warship{}
+	a.paintingSea()
+	b.placingShipsAndDots(a.searchingFreeSlots(a.randomDirection(), b.unrepeatedShip()))
+	fmt.Println(a.board)
 }
