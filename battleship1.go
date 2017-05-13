@@ -14,6 +14,7 @@ func getRandom(num int) int {
 	return randomNumber
 }
 
+// Sea : selfdocumentated
 type Sea struct {
 	board [8][8]string
 }
@@ -62,6 +63,7 @@ func (s *Sea) searchingFreeSlots(direction string, lenShip int) []map[int]int {
 	return shipCoordinates
 }
 
+// Warship : selfdocumentated
 type Warship struct {
 	*Sea
 	usedShips []int
@@ -85,7 +87,7 @@ func (w *Warship) unrepeatedShip() int {
 func (w *Warship) placingShipsAndDots(coordinates []map[int]int) {
 	lenShip := len(coordinates)
 	dotCoord := [][]int{{1, 1}, {1, 0}, {0, 1}, {-1, -1}, {-1, 0}, {0, -1}, {-1, 1}, {1, -1}}
-	board := &Warship{Sea: &Sea{}}.board
+	board := &w.Sea.board
 	for _, coord := range coordinates {
 		for row, col := range coord {
 			board[row][col] = strconv.Itoa(lenShip)
