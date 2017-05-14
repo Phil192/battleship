@@ -1,6 +1,3 @@
-#Battleship game (Morskoy boy)
-__author__= 'Filin Vadim'
-
 import random
 
 class Sea(object):
@@ -51,15 +48,13 @@ class Warship(Sea):
                 len_ship = random.randint(1, 4)
             else:
                 self.used_ships.append(len_ship)
-
                 return len_ship
 
     def placing_ships_and_dots(self, coordinates_lenship_tuple):
+        dot_coordinates = [[1, 1], [1, 0], [0, 1], [-1, -1], [-1, 0], [0, -1], [-1, 1], [1, -1]]
         for coord in coordinates_lenship_tuple[0]:
             for row, col in coord.items():
                 self.board[row][col] = str(coordinates_lenship_tuple[1])
-
-                dot_coordinates = [[1, 1], [1, 0], [0, 1], [-1, -1], [-1, 0], [0, -1], [-1, 1], [1, -1]]
                 for index in dot_coordinates:
                     if row + index[0] < 0 or row + index[0] > 7 or col + index[1] < 0 or col + index[1] > 7:
                         continue
