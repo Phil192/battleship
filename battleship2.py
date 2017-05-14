@@ -35,7 +35,7 @@ class Sea(object):
                 ship_start_random = random.randint(0, 7 - len_ship)
                 valid_slots = 0
 
-        return ship_coordinates, len_ship
+        return ship_coordinates
 
 
 class Warship(Sea):
@@ -44,17 +44,18 @@ class Warship(Sea):
     def unrepeated_ship(self):
         len_ship = random.randint(1, 4)
         while len(self.used_ships) < 4:
-            if len_ship in self.used_ships:
-                len_ship = random.randint(1, 4)
-            else:
+            if len_ship not in self.used_ships:
                 self.used_ships.append(len_ship)
                 return len_ship
+            len_ship = random.randint(1, 4)
 
-    def placing_ships_and_dots(self, coordinates_lenship_tuple):
+    def placing_ships_and_dots(self, coordinates):
         dot_coordinates = [[1, 1], [1, 0], [0, 1], [-1, -1], [-1, 0], [0, -1], [-1, 1], [1, -1]]
-        for coord in coordinates_lenship_tuple[0]:
+        len_ship = len(coordinates)
+        
+        for coord in coordinates:
             for row, col in coord.items():
-                self.board[row][col] = str(coordinates_lenship_tuple[1])
+                self.board[row][col] = str(len_ship)
                 for index in dot_coordinates:
                     if row + index[0] < 0 or row + index[0] > 7 or col + index[1] < 0 or col + index[1] > 7:
                         continue

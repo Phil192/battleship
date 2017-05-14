@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math/rand"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -63,7 +64,7 @@ func (s *Sea) searchingFreeSlots(direction string, lenShip int) []map[int]int {
 	return shipCoordinates
 }
 
-// Warship : selfdocumentated
+// Warship : selfdocumentated, composition with Sea struct
 type Warship struct {
 	*Sea
 	usedShips []int
@@ -115,6 +116,7 @@ func main() {
 	b.placingShipsAndDots(a.searchingFreeSlots(a.randomDirection(), b.unrepeatedShip()))
 	b.placingShipsAndDots(a.searchingFreeSlots(a.randomDirection(), b.unrepeatedShip()))
 	b.placingShipsAndDots(a.searchingFreeSlots(a.randomDirection(), b.unrepeatedShip()))
-
-	fmt.Println(a.board)
+	for index := range a.board {
+		fmt.Println(strings.Join(a.board[index][:], " "))
+	}
 }
