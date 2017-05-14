@@ -14,8 +14,7 @@ class Sea(object):
         random_number = random.randint(1, 2)
         if random_number == 1:
             return 'row'
-        elif random_number == 2:
-            return 'col'
+        return 'col'
 
     def searching_free_slots(self, direction, len_ship):
         ship_coordinates = []
@@ -82,7 +81,7 @@ for x in a.board: print(" ".join(x))
 
 
 
-user_board = []
+'''user_board = []
 pull_of_ships = []
 
 for number in range(8):          #painting sea
@@ -107,4 +106,4 @@ while len(pull_of_ships) < 4:
         continue
     elif len(str(ship_choice)) != 1:
         print('You need to choose number of ship length. It must be integer!')
-        continue
+        continue'''
