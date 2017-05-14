@@ -88,6 +88,7 @@ func (w *Warship) placingShipsAndDots(coordinates []map[int]int) {
 	lenShip := len(coordinates)
 	dotCoord := [][]int{{1, 1}, {1, 0}, {0, 1}, {-1, -1}, {-1, 0}, {0, -1}, {-1, 1}, {1, -1}}
 	board := &w.Sea.board
+
 	for _, coord := range coordinates {
 		for row, col := range coord {
 			board[row][col] = strconv.Itoa(lenShip)
@@ -109,9 +110,11 @@ func main() {
 	a := Sea{}
 	a.paintingSea()
 	b := Warship{Sea: &a}
+
 	b.placingShipsAndDots(a.searchingFreeSlots(a.randomDirection(), b.unrepeatedShip()))
 	b.placingShipsAndDots(a.searchingFreeSlots(a.randomDirection(), b.unrepeatedShip()))
 	b.placingShipsAndDots(a.searchingFreeSlots(a.randomDirection(), b.unrepeatedShip()))
 	b.placingShipsAndDots(a.searchingFreeSlots(a.randomDirection(), b.unrepeatedShip()))
+
 	fmt.Println(a.board)
 }
