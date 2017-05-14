@@ -20,6 +20,12 @@ type Sea struct {
 	board [8][8]string
 }
 
+// Warship : selfdocumentated, composition with Sea struct
+type Warship struct {
+	*Sea
+	usedShips []int
+}
+
 func (s *Sea) paintingSea() {
 	for i := 0; i < 8; i++ {
 		for j := 0; j < 8; j++ {
@@ -62,12 +68,6 @@ func (s *Sea) searchingFreeSlots(direction string, lenShip int) []map[int]int {
 		}
 	}
 	return shipCoordinates
-}
-
-// Warship : selfdocumentated, composition with Sea struct
-type Warship struct {
-	*Sea
-	usedShips []int
 }
 
 func (w *Warship) unrepeatedShip() int {
@@ -116,7 +116,7 @@ func main() {
 	b.placingShipsAndDots(a.searchingFreeSlots(a.randomDirection(), b.unrepeatedShip()))
 	b.placingShipsAndDots(a.searchingFreeSlots(a.randomDirection(), b.unrepeatedShip()))
 	b.placingShipsAndDots(a.searchingFreeSlots(a.randomDirection(), b.unrepeatedShip()))
-	for index := range a.board {
-		fmt.Println(strings.Join(a.board[index][:], " "))
+	for _, value := range a.board {
+		fmt.Println(strings.Join(value[:], " "))
 	}
 }
