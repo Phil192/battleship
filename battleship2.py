@@ -42,17 +42,17 @@ class Warship(Sea):
     used_ships = []
 
     def unrepeated_ship(self):
-        len_ship = random.randint(1, 4)
         while len(self.used_ships) < 4:
+            len_ship = random.randint(1, 4)
             if len_ship not in self.used_ships:
                 self.used_ships.append(len_ship)
                 return len_ship
-            len_ship = random.randint(1, 4)
+
 
     def placing_ships_and_dots(self, coordinates):
         dot_coordinates = [[1, 1], [1, 0], [0, 1], [-1, -1], [-1, 0], [0, -1], [-1, 1], [1, -1]]
         len_ship = len(coordinates)
-        
+
         for coord in coordinates:
             for row, col in coord.items():
                 self.board[row][col] = str(len_ship)
