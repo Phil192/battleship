@@ -71,18 +71,12 @@ func (s *Sea) searchingFreeSlots(direction string, lenShip int) []map[int]int {
 }
 
 func (w *Warship) unrepeatedShip() int {
-	lenShip := getRandom(4) + 1
 	for len(w.usedShips) < 4 {
-		w.usedShips = append(w.usedShips, lenShip)
-		for _, ship := range w.usedShips {
-			if lenShip != ship {
-				w.usedShips = append(w.usedShips, lenShip)
-			} else {
-				lenShip = getRandom(4) + 1
-			}
-		}
+		ship := len(w.usedShips) + 1
+		w.usedShips = append(w.usedShips, ship)
+		return ship
 	}
-	return lenShip
+	return 0
 }
 
 func (w *Warship) placingShipsAndDots(coordinates []map[int]int) {
@@ -116,6 +110,8 @@ func main() {
 	b.placingShipsAndDots(a.searchingFreeSlots(a.randomDirection(), b.unrepeatedShip()))
 	b.placingShipsAndDots(a.searchingFreeSlots(a.randomDirection(), b.unrepeatedShip()))
 	b.placingShipsAndDots(a.searchingFreeSlots(a.randomDirection(), b.unrepeatedShip()))
+	b.placingShipsAndDots(a.searchingFreeSlots(a.randomDirection(), b.unrepeatedShip()))
+
 	for _, value := range a.board {
 		fmt.Println(strings.Join(value[:], " "))
 	}
